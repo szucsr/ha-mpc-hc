@@ -1,0 +1,14 @@
+send_command:
+  target:
+    entity:
+      integration: mpc_hc
+      domain: media_player
+  fields:
+    command:
+      required: true
+      example: 956
+      selector:
+        number:
+          min: 0
+          max: 65535
+          mode: box

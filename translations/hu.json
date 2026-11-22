@@ -1,0 +1,134 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "MPC-HC hozzáadása",
+                "menu_options": {
+                    "scan": "Hálózat átvizsgálása MPC-HC után",
+                    "manual": "Cím megadása kézzel"
+                }
+            },
+            "scan": {
+                "title": "Hálózat átvizsgálása",
+                "description": "A Home Assistant a helyi hálózata minden címén megnézi, van-e MPC-HC webes felület az alábbi porton. Az átvizsgálás az űrlap elküldésekor indul, és csak ehhez a porthoz kapcsolódik.\n\nA PC-nek be kell lennie kapcsolva, az MPC-HC-ben pedig be kell kapcsolni a webes felületet, és **ki kell venni a pipát az „Allow access from localhost only” opcióból** (*View → Options → Player → Web Interface*).\n\n⚠️ **Biztonsági figyelmeztetés:** a webszerver nem használ hitelesítést vagy titkosítást. Ajánlott a Windows tűzfalban a portot csak a Home Assistant IP-címére engedélyezni.",
+                "data": {"port": "Átvizsgálandó port"},
+                "data_description": {"port": "Alapértelmezés: 13579"}
+            },
+            "select_device": {
+                "title": "Lejátszó kiválasztása",
+                "description": "Ezeket a lejátszókat találtam. A név az eszköz neve és az entity ID-k alapja.",
+                "data": {"host": "Lejátszó", "name": "Név"}
+            },
+            "manual": {
+                "title": "MPC-HC csatlakoztatása",
+                "description": "Add meg annak a PC-nek a címét, amelyen az MPC-HC fut.\n\n**Az MPC-HC beállítása (egyszer, a PC-n):**\n1. *View → Options → Player → Web Interface*\n2. Pipáld be: **Listen on port**, és add meg a portot (alapértelmezett: 13579)\n3. **Vedd ki a pipát az „Allow access from localhost only” opcióból.** Ha bekapcsolva marad, csak maga a PC éri el a webszervert, a Home Assistant nem.\n\n⚠️ **Biztonsági figyelmeztetés:** a webszerver nem használ hitelesítést vagy titkosítást. A localhost-korlátozás feloldása után a hálózaton bárki vezérelheti a lejátszót és láthatja a képernyőképet. Ajánlott a Windows tűzfalban a portot csak a Home Assistant IP-címére engedélyezni.",
+                "data": {"name": "Név", "host": "IP-cím vagy hosztnév", "port": "Port"},
+                "data_description": {
+                    "name": "Az eszköz neve és az entity ID-k alapja, pl. „MPC-HC Nappali”",
+                    "host": "Alapértelmezés: 127.0.0.1 (csak akkor jó, ha a HA és az MPC-HC ugyanazon a gépen fut)",
+                    "port": "Alapértelmezés: 13579"
+                }
+            },
+            "reconfigure": {
+                "title": "MPC-HC újrakonfigurálása",
+                "description": "Módosíthatod a nevet vagy a PC címét. Az entitások és az előzmények megmaradnak.",
+                "data": {"name": "Név", "host": "IP-cím vagy hosztnév", "port": "Port"}
+            }
+        },
+        "error": {
+            "cannot_connect": "Nincs válasz. Ellenőrizd, hogy a PC be van-e kapcsolva, fut-e az MPC-HC bekapcsolt webes felülettel, és helyes-e az IP, a port és a tűzfal.",
+            "localhost_only": "Az MPC-HC fogadta a kapcsolatot, de azonnal lezárta. Ez általában azt jelenti, hogy az „Allow access from localhost only” opció még be van kapcsolva (View → Options → Player → Web Interface).",
+            "not_mpc_hc": "A cím válaszol, de nem MPC-HC webes felületnek tűnik.",
+            "already_configured": "Ezzel a címmel és porttal már van felvéve MPC-HC.",
+            "no_devices_found": "Nem találtam MPC-HC-t. Ellenőrizd, hogy a PC be van-e kapcsolva, fut-e az MPC-HC bekapcsolt webes felülettel, és engedi-e a Windows tűzfal a portot. A címet kézzel is megadhatod.",
+            "localhost_only_found": "Valami elfogadja a kapcsolatot ezen a porton, de azonnal lezárja. Ez valószínűleg az MPC-HC bekapcsolt „Allow access from localhost only” opcióval (View → Options → Player → Web Interface).",
+            "all_configured": "Minden megtalált lejátszó már fel van véve."
+        },
+        "abort": {
+            "reconfigure_successful": "Az újrakonfigurálás sikeres volt."
+        }
+    },
+    "services": {
+        "send_command": {
+            "name": "Parancs küldése",
+            "description": "Nyers MPC-HC parancskódot (WM_COMMAND) küld a lejátszónak.",
+            "fields": {
+                "command": {
+                    "name": "Parancs",
+                    "description": "A parancs számkódja, pl. 956 a feliratok ki- és bekapcsolásához."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "file": {"name": "Fájl"},
+            "directory": {"name": "Könyvtár"},
+            "player_state": {"name": "Lejátszó állapota"},
+            "position": {"name": "Pozíció"},
+            "duration": {"name": "Hossz"},
+            "playback_rate": {"name": "Lejátszási sebesség"},
+            "file_size": {"name": "Fájlméret"},
+            "version": {"name": "Verzió"},
+            "title": {"name": "Cím"},
+            "season": {"name": "Évad"},
+            "episode": {"name": "Epizód"}
+        },
+        "button": {
+            "jump_back_small": {"name": "Ugrás vissza (kicsi)"},
+            "jump_forward_small": {"name": "Ugrás előre (kicsi)"},
+            "jump_back_medium": {"name": "Ugrás vissza (közepes)"},
+            "jump_forward_medium": {"name": "Ugrás előre (közepes)"},
+            "jump_back_large": {"name": "Ugrás vissza (nagy)"},
+            "jump_forward_large": {"name": "Ugrás előre (nagy)"},
+            "jump_back_keyframe": {"name": "Ugrás vissza (kulcskocka)"},
+            "jump_forward_keyframe": {"name": "Ugrás előre (kulcskocka)"},
+            "jump_to_beginning": {"name": "Ugrás az elejére"},
+
+            "increase_rate": {"name": "Sebesség növelése"},
+            "decrease_rate": {"name": "Sebesség csökkentése"},
+            "reset_rate": {"name": "Sebesség visszaállítása"},
+
+            "audio_previous": {"name": "Előző hangsáv"},
+            "audio_next": {"name": "Következő hangsáv"},
+            "audio_delay_decrease": {"name": "Hang késleltetése −10 ms"},
+            "audio_delay_increase": {"name": "Hang késleltetése +10 ms"},
+
+            "subtitle_toggle": {"name": "Felirat ki/be"},
+            "subtitle_previous": {"name": "Előző feliratsáv"},
+            "subtitle_next": {"name": "Következő feliratsáv"},
+            "subtitle_goto_previous": {"name": "Ugrás az előző feliratsorra"},
+            "subtitle_goto_next": {"name": "Ugrás a következő feliratsorra"},
+            "subtitle_delay_decrease": {"name": "Felirat késleltetése −"},
+            "subtitle_delay_increase": {"name": "Felirat késleltetése +"},
+
+            "panscan_reset": {"name": "Pan & Scan visszaállítása"},
+            "panscan_inc_width": {"name": "Pan & Scan szélesség növelése"},
+            "panscan_dec_width": {"name": "Pan & Scan szélesség csökkentése"},
+            
+            "ontop_never": {"name": "Mindig felül: soha"},
+            "ontop_always": {"name": "Mindig felül: mindig"},
+            "ontop_while_playing": {"name": "Mindig felül: lejátszás közben"},
+            "ontop_while_playing_video": {"name": "Mindig felül: videó lejátszása közben"},
+            
+            "fullscreen": {"name": "Teljes képernyő (felbontásváltás nélkül)"},
+            "exit": {"name": "MPC-HC bezárása"}
+        },
+        "switch": {
+            "muted": {"name": "Némítva"}
+        },
+        "select": {
+            "video_frame": {
+                "name": "Videókeret",
+                "state": {"normal": "Normál", "inside": "Belül", "stretch": "Nyújtás"}
+            }
+        },
+        "number": {
+            "volume": {"name": "Hangerő"},
+            "seek": {"name": "Pozíció (tekerés)"}
+        },
+        "image": {
+            "snapshot": {"name": "Pillanatkép"}
+        }
+    }
+}
