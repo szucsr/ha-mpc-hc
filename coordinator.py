@@ -1,3 +1,11 @@
+"""Data update coordinator: the single place that talks to a player.
+
+- Polls the player state (faster while playing)
+- Sends commands and refreshes the state right after
+- Looks up TMDb metadata in the background when a new file starts
+- Saves and removes the user's TMDb corrections
+"""
+
 from __future__ import annotations
 
 import logging

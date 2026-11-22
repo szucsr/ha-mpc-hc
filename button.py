@@ -1,3 +1,5 @@
+"""Button platform: one-shot MPC-HC commands (jumps, speed, tracks, window control)."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

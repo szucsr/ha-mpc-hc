@@ -1,3 +1,10 @@
+"""Set up and unload the MPC-HC integration.
+
+- Loads the shared TMDb settings and cache once per Home Assistant start
+- Creates the API client and the coordinator for every configured player
+- Forwards the setup to the entity platforms and unloads them again
+"""
+
 from __future__ import annotations
 
 from homeassistant.const import CONF_HOST, CONF_PORT, Platform

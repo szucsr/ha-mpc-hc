@@ -1,4 +1,4 @@
-"""Constants for the MPC-HC integration."""
+"""Constants of the MPC-HC integration: defaults, polling settings and WM_COMMAND codes."""
 
 from enum import IntEnum
 

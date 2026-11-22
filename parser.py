@@ -1,6 +1,9 @@
-"""The parser works on the file name first and uses the parent folder name as a
-fallback, because releases are often stored as ``<Show>.S05/<file>.mkv``.
-It is pure Python (no Home Assistant imports) so it can be unit tested alone.
+"""Recognise title, season, episode and year from file and folder names.
+
+- Splits names into words and cuts the title at the first release marker
+- Understands S05E14, 1x05 and double episodes
+- Falls back to the folder name for meaningless file names
+- Has no Home Assistant imports, so it can be tested on its own
 """
 
 from __future__ import annotations

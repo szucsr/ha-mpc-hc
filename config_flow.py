@@ -1,3 +1,11 @@
+"""Config flow: adding, reconfiguring and setting up MPC-HC players.
+
+- Add a player by scanning the network or by entering its address
+- Check that the address really is an MPC-HC web interface
+- Reconfigure the name, host or port without losing the entities
+- Options flow for the TMDb token and language shared by all players
+"""
+
 from __future__ import annotations
 
 import ipaddress

@@ -1,3 +1,11 @@
+"""Media player platform: the main MPC-HC entity.
+
+- Playback, seek, volume and playlist control
+- Series or movie title, second line (episode code and title) and poster
+- Recognised and TMDb details as attributes
+- Services: send_command and set_tmdb_id
+"""
+
 from __future__ import annotations
 
 from datetime import datetime

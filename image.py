@@ -1,3 +1,9 @@
+"""Image platform: the live video snapshot and the TMDb pictures.
+
+- Snapshot of the current video frame, refreshed when it is likely to change
+- Poster, backdrop and episode picture downloaded from TMDb
+"""
+
 from __future__ import annotations
 
 from homeassistant.components.image import ImageEntity

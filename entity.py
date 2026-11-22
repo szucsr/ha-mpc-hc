@@ -1,3 +1,5 @@
+"""Base entity: groups all entities of a player under one device."""
+
 from __future__ import annotations
 
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT

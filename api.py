@@ -1,3 +1,11 @@
+"""Async client for the MPC-HC web interface.
+
+- Reads the player state from /variables.html into an MpcHcStatus
+- Sends commands (play, seek, volume, ...) to /command.html
+- Fetches the video snapshot from /snapshot.jpg
+- Turns connection problems into specific errors (e.g. localhost-only blocking)
+"""
+
 from __future__ import annotations
 
 import errno

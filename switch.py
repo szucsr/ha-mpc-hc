@@ -1,3 +1,5 @@
+"""Switch platform: the player's mute state."""
+
 from __future__ import annotations
 
 from typing import Any

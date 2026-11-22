@@ -1,3 +1,5 @@
+"""Number platform: volume and seek position sliders."""
+
 from __future__ import annotations
 
 from homeassistant.components.number import NumberEntity, NumberMode

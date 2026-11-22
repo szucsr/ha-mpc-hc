@@ -1,3 +1,5 @@
+"""Sensor platform: player state, file info and details recognised from the file name."""
+
 from __future__ import annotations
 
 from collections.abc import Callable

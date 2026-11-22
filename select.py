@@ -1,3 +1,5 @@
+"""Select platform: how the video is fitted into the player window."""
+
 from __future__ import annotations
 
 from homeassistant.const import EntityCategory

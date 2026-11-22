@@ -1,3 +1,10 @@
+"""Find MPC-HC web servers on the local network.
+
+- Probes every address of the subnets on one TCP port
+- Asks whatever answers whether it is an MPC-HC web interface
+- Reports the players found and hosts that look like MPC-HC with blocked access
+"""
+
 from __future__ import annotations
 
 import asyncio
