@@ -9,21 +9,30 @@
 from __future__ import annotations
 
 import ipaddress
+import voluptuous as vol
+import re
 from collections.abc import Mapping
 from typing import Any
 
-import voluptuous as vol
-
 from homeassistant.components import network
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlow,
+)
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import (
+    BooleanSelector,
     SelectOptionDict,
     SelectSelector,
     SelectSelectorConfig,
     SelectSelectorMode,
+    TextSelector,
+    TextSelectorConfig,
+    TextSelectorType,
 )
 
 from .api import (
@@ -32,11 +41,22 @@ from .api import (
     MpcHcConnectionError,
     MpcHcInvalidResponseError,
 )
-from .const import DEFAULT_HOST, DEFAULT_NAME, DEFAULT_PORT, DOMAIN
+from .const import (
+    CONF_REMOVE_TOKEN,
+    CONF_TMDB_LANGUAGE,
+    CONF_TMDB_TOKEN,
+    DEFAULT_HOST,
+    DEFAULT_NAME,
+    DEFAULT_PORT,
+    DOMAIN,
+)
 from .discovery import DiscoveredPlayer, async_scan
+from .shared import get_shared
+from .tmdb import TmdbClient, TmdbError
+
 
 PORT_VALIDATOR = vol.All(vol.Coerce(int), vol.Range(min=1, max=65535))
-
+LANGUAGE_RE = re.compile(r"^[a-z]{2}(-[A-Z]{2})?$")
 
 async def _async_local_networks(
     hass: HomeAssistant,
@@ -64,6 +84,12 @@ class MpcHcConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle the UI setup and reconfiguration of an MPC-HC instance."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> MpcHcOptionsFlow:
+        """Create the options flow (the TMDb settings)."""
+        return MpcHcOptionsFlow()
 
     def __init__(self) -> None:
         """Remember the players found by the last scan."""
@@ -253,4 +279,58 @@ class MpcHcConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="reconfigure",
             data_schema=self._schema(user_input or entry.data),
             errors=errors,
+        )
+
+class MpcHcOptionsFlow(OptionsFlow):
+    """TMDb settings. They are shared by all players, not stored per entry."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        shared = get_shared(self.hass)
+        await shared.async_load()
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            token = user_input.get(CONF_TMDB_TOKEN, "").strip()
+            language = user_input.get(CONF_TMDB_LANGUAGE, "").strip()
+
+            # An empty token field keeps the saved token unless removal is ticked
+            if user_input.get(CONF_REMOVE_TOKEN):
+                new_token = ""
+            else:
+                new_token = token or shared.tmdb_token
+
+            if language and not LANGUAGE_RE.match(language):
+                errors["base"] = "invalid_language"
+            elif new_token and new_token != shared.tmdb_token:
+                # Check a new token with a test request before saving it
+                client = TmdbClient(async_get_clientsession(self.hass), new_token, "")
+                try:
+                    if not await client.check_token():
+                        errors["base"] = "invalid_token"
+                except TmdbError:
+                    errors["base"] = "tmdb_unreachable"
+
+            if not errors:
+                await shared.async_update_settings(new_token, language)
+                # Every player picks up the new settings
+                for entry in self.hass.config_entries.async_entries(DOMAIN):
+                    self.hass.config_entries.async_schedule_reload(entry.entry_id)
+                return self.async_create_entry(data={})
+
+        schema = vol.Schema(
+            {
+                vol.Optional(CONF_TMDB_TOKEN, default=""): TextSelector(
+                    TextSelectorConfig(type=TextSelectorType.PASSWORD)
+                ),
+                vol.Optional(CONF_REMOVE_TOKEN, default=False): BooleanSelector(),
+                vol.Optional(CONF_TMDB_LANGUAGE, default=shared.tmdb_language): str,
+            }
+        )
+        return self.async_show_form(
+            step_id="init",
+            data_schema=schema,
+            errors=errors,
+            description_placeholders={"token_state": "✅" if shared.tmdb_token else "❌"},
         )

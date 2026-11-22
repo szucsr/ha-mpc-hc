@@ -18,6 +18,7 @@ from homeassistant.helpers.typing import StateType
 
 from .coordinator import MpcHcConfigEntry, MpcHcCoordinator
 from .entity import MpcHcEntity
+from .metadata import STATUS_MATCHED
 
 # Sensors only read the coordinator data, so updates may run in parallel
 PARALLEL_UPDATES = 0
@@ -32,6 +33,15 @@ def _clip(text: str) -> str | None:
     if len(text) <= MAX_STATE_LENGTH:
         return text
     return text[: MAX_STATE_LENGTH - 1] + "…"
+
+def _title(c: MpcHcCoordinator) -> str | None:
+    """Series or movie title: TMDb's spelling when matched, else the file name's."""
+    if not c.data.has_media:
+        return None
+    metadata = c.metadata
+    if metadata is not None and metadata.status == STATUS_MATCHED and metadata.title:
+        return _clip(metadata.title)
+    return _clip(c.media_info.title)
 
 @dataclass(frozen=True, kw_only=True)
 class MpcHcSensorDescription(SensorEntityDescription):
@@ -100,11 +110,15 @@ SENSORS: tuple[MpcHcSensorDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda c: c.data.version,
     ),
-    # Values recognised from the file name (see parser.py)
     MpcHcSensorDescription(
         key="title",
         translation_key="title",
-        value_fn=lambda c: (c.media_info.title or None) if c.data.has_media else None,
+        value_fn=_title,
+    ),
+    MpcHcSensorDescription(
+        key="episode_title",
+        translation_key="episode_title",
+        value_fn=lambda c: _clip(c.metadata.episode_title or "") if c.metadata else None,
     ),
     MpcHcSensorDescription(
         key="season",

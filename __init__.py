@@ -13,6 +13,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import MpcHcApi
 from .coordinator import MpcHcConfigEntry, MpcHcCoordinator
+from .shared import get_shared
 
 # More platforms (sensor, image, button, select, number) are added in later steps
 PLATFORMS: list[Platform] = [
@@ -27,6 +28,9 @@ PLATFORMS: list[Platform] = [
 
 async def async_setup_entry(hass: HomeAssistant, entry: MpcHcConfigEntry) -> bool:
     """Set up MPC-HC from a config entry."""
+    # Load the TMDb settings and cache before any lookup can start
+    await get_shared(hass).async_load()
+
     api = MpcHcApi(
         async_get_clientsession(hass), entry.data[CONF_HOST], entry.data[CONF_PORT]
     )

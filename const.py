@@ -97,3 +97,16 @@ class Cmd(IntEnum):
     ONTOP_ALWAYS = 884
     ONTOP_WHILE_PLAYING = 885
     ONTOP_WHILE_PLAYING_VIDEO = 886
+
+# TMDb settings (shared by all players, kept in .storage)
+CONF_TMDB_TOKEN = "tmdb_token"
+CONF_TMDB_LANGUAGE = "tmdb_language"
+CONF_REMOVE_TOKEN = "remove_token"
+
+# set_tmdb_id service
+SERVICE_SET_TMDB_ID = "set_tmdb_id"
+ATTR_TMDB_ID = "tmdb_id"
+ATTR_TMDB_MEDIA_TYPE = "media_type"
+ATTR_SCOPE = "scope"
+SCOPE_SERIES = "series"
+SCOPE_FILE = "file"

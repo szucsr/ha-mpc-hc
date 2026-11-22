@@ -48,6 +48,37 @@
             "reconfigure_successful": "Reconfiguration was successful."
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "title": "TMDb settings",
+                "description": "Cover art, descriptions and episode titles come from TMDb. The token and the language are shared by all your MPC-HC players.\n\nSaved token: {token_state}\n\nCreate a free account at themoviedb.org and copy the *API Read Access Token* from Settings → API. Without a token everything works, only the TMDb details are missing.\n\nThis product uses the TMDB API but is not endorsed or certified by TMDB.",
+                "data": {
+                    "tmdb_token": "API Read Access Token",
+                    "remove_token": "Remove the saved token",
+                    "tmdb_language": "Language"
+                },
+                "data_description": {
+                    "tmdb_token": "Leave empty to keep the saved token.",
+                    "tmdb_language": "For example hu-HU or en-US. Leave empty to use the Home Assistant language."
+                }
+            }
+        },
+        "error": {
+            "invalid_token": "TMDb rejected this token.",
+            "tmdb_unreachable": "TMDb could not be reached. Try again later.",
+            "invalid_language": "Use a language code such as hu-HU or en-US."
+        }
+    },
+    "exceptions": {
+        "no_media": {"message": "Nothing is playing, so there is no file to apply this to."},
+        "no_title": {"message": "No title could be recognised from this file name. Use \"This file only\" instead."},
+        "media_type_required": {"message": "Choose the media type (TV show or movie) together with the TMDb ID."}
+    },
+    "selector": {
+        "media_type": {"options": {"tv": "TV show", "movie": "Movie"}},
+        "scope": {"options": {"series": "All files with this title", "file": "This file only"}}
+    },
     "services": {
         "send_command": {
             "name": "Send command",
@@ -57,6 +88,15 @@
                     "name": "Command",
                     "description": "The numeric command code, e.g. 956 for subtitles on/off."
                 }
+            }
+        },
+        "set_tmdb_id": {
+            "name": "Set TMDb ID",
+            "description": "Corrects a wrong TMDb match. The ID is the number in the item's TMDb address (themoviedb.org/tv/1234-title means ID 1234). Leave the ID empty to remove a correction.",
+            "fields": {
+                "tmdb_id": {"name": "TMDb ID", "description": "The TMDb ID of the correct series or movie."},
+                "media_type": {"name": "Media type", "description": "Whether the ID belongs to a TV show or a movie."},
+                "scope": {"name": "Applies to", "description": "All files with the recognised title, or only the file that is playing now."}
             }
         }
     },
@@ -71,6 +111,7 @@
             "file_size": {"name": "File size"},
             "version": {"name": "Version"},
             "title": {"name": "Title"},
+            "episode_title": {"name": "Episode title"},
             "season": {"name": "Season"},
             "episode": {"name": "Episode"}
         },
@@ -128,7 +169,10 @@
             "seek": {"name": "Seek position"}
         },
         "image": {
-            "snapshot": {"name": "Snapshot"}
+            "snapshot": {"name": "Snapshot"},
+            "poster": {"name": "Poster"},
+            "backdrop": {"name": "Backdrop"},
+            "episode_still": {"name": "Episode picture"}
         }
     }
 }

@@ -23,10 +23,23 @@ from homeassistant.util import dt as dt_util
 from homeassistant.helpers import entity_platform
 
 from .api import STATE_PAUSED, STATE_PLAYING
-from .const import ATTR_COMMAND, SERVICE_SEND_COMMAND, Cmd
+from .const import (
+    ATTR_COMMAND,
+    ATTR_SCOPE,
+    ATTR_TMDB_ID,
+    ATTR_TMDB_MEDIA_TYPE,
+    SCOPE_FILE,
+    SCOPE_SERIES,
+    SERVICE_SEND_COMMAND,
+    SERVICE_SET_TMDB_ID,
+    Cmd,
+)
 from .coordinator import MpcHcConfigEntry
 from .entity import MpcHcEntity
+from .metadata import STATUS_MATCHED, STATUS_PENDING, MediaMetadata
 from .parser import MEDIA_MOVIE, MEDIA_TVSHOW
+from .shared import get_shared
+
 
 # Commands are sent one at a time so MPC-HC is not flooded
 PARALLEL_UPDATES = 1
@@ -49,6 +62,19 @@ async def async_setup_entry(
             )
         },
         "async_send_wm_command",
+    )
+    
+    # mpc_hc.set_tmdb_id: correct a wrong TMDb match
+    platform.async_register_entity_service(
+        SERVICE_SET_TMDB_ID,
+        {
+            vol.Optional(ATTR_TMDB_ID): vol.All(vol.Coerce(int), vol.Range(min=1)),
+            vol.Optional(ATTR_TMDB_MEDIA_TYPE): vol.In(["tv", "movie"]),
+            vol.Optional(ATTR_SCOPE, default=SCOPE_SERIES): vol.In(
+                [SCOPE_SERIES, SCOPE_FILE]
+            ),
+        },
+        "async_set_tmdb_id",
     )
 
 class MpcHcMediaPlayer(MediaPlayerEntity, MpcHcEntity):
@@ -73,6 +99,7 @@ class MpcHcMediaPlayer(MediaPlayerEntity, MpcHcEntity):
         self._attr_unique_id = f"{self._entry_id}_media_player"
         # Timestamp of the last poll; HA uses it to extrapolate the position
         self._position_updated_at: datetime | None = None
+        self._shared = get_shared(coordinator.hass)
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -134,10 +161,21 @@ class MpcHcMediaPlayer(MediaPlayerEntity, MpcHcEntity):
         # return MediaType.VIDEO
 
     @property
+    def _tmdb(self) -> MediaMetadata | None:
+        """TMDb metadata of the current file, once the lookup has matched."""
+        metadata = self.coordinator.metadata
+        if metadata is not None and metadata.status == STATUS_MATCHED:
+            return metadata
+        return None
+
+    @property
     def media_title(self) -> str | None:
-        """Return the series or movie title; the episode code goes to app_name."""
+        """Return the series or movie title, as TMDb spells it when it matched."""
         if not self._has_media:
             return None
+        tmdb = self._tmdb
+        if tmdb and tmdb.title:
+            return tmdb.title
         info = self.coordinator.media_info
         if info.title:
             return info.title
@@ -150,7 +188,60 @@ class MpcHcMediaPlayer(MediaPlayerEntity, MpcHcEntity):
         if not self._has_media:
             return None
         info = self.coordinator.media_info
-        return info.title if info.media_type == MEDIA_TVSHOW else None
+        if info.media_type != MEDIA_TVSHOW:
+            return None
+        tmdb = self._tmdb
+        return (tmdb.title if tmdb and tmdb.title else None) or info.title
+
+    @property
+    def app_name(self) -> str | None:
+        """Second line of the media display.
+
+        TV shows: the episode code and, when TMDb knows it, the episode title.
+        Movies: the year.
+        """
+        if not self._has_media:
+            return None
+        info = self.coordinator.media_info
+        if info.media_type == MEDIA_TVSHOW:
+            code = info.episode_code
+            tmdb = self._tmdb
+            if tmdb and tmdb.episode_title:
+                return f"{code} · {tmdb.episode_title}" if code else tmdb.episode_title
+            return code
+        if info.media_type == MEDIA_MOVIE and info.year:
+            return str(info.year)
+        return None
+
+    @property
+    def media_image_url(self) -> str | None:
+        """Poster of the series or movie; Home Assistant proxies and caches it."""
+        tmdb = self._tmdb
+        if not self._has_media or tmdb is None:
+            return None
+        return self._shared.image_url(tmdb.poster_path, "poster")
+
+    @property
+    def extra_state_attributes(self) -> dict[str, object]:
+        """Expose recognised details that have no standard media player field."""
+        if not self._has_media:
+            return {}
+        info = self.coordinator.media_info
+        metadata = self.coordinator.metadata
+        tmdb = self._tmdb
+        return {
+            "year": info.year,
+            "resolution": info.resolution,
+            "source": info.source,
+            "languages": list(info.languages),
+            "tmdb_status": metadata.status if metadata else STATUS_PENDING,
+            "overview": tmdb.overview if tmdb else None,
+            "genres": list(tmdb.genres) if tmdb else [],
+            "rating": tmdb.rating if tmdb else None,
+            "release_date": tmdb.release_date if tmdb else None,
+            "tmdb_id": tmdb.tmdb_id if tmdb else None,
+            "imdb_id": tmdb.imdb_id if tmdb else None,
+        }
 
     @property
     def media_season(self) -> str | None:
@@ -165,31 +256,6 @@ class MpcHcMediaPlayer(MediaPlayerEntity, MpcHcEntity):
             return None
         episode = self.coordinator.media_info.episode
         return str(episode) if episode is not None else None
-
-    @property
-    def app_name(self) -> str | None:
-        """Second line of the media display: the episode code, or a movie's year."""
-        if not self._has_media:
-            return None
-        info = self.coordinator.media_info
-        if info.media_type == MEDIA_TVSHOW:
-            return info.episode_code
-        if info.media_type == MEDIA_MOVIE and info.year:
-            return str(info.year)
-        return None
-
-    @property
-    def extra_state_attributes(self) -> dict[str, object]:
-        """Expose recognised details that have no standard media player field."""
-        if not self._has_media:
-            return {}
-        info = self.coordinator.media_info
-        return {
-            "year": info.year,
-            "resolution": info.resolution,
-            "source": info.source,
-            "languages": list(info.languages),
-        }
 
     @property
     def media_duration(self) -> int | None:
@@ -255,3 +321,12 @@ class MpcHcMediaPlayer(MediaPlayerEntity, MpcHcEntity):
     async def async_send_wm_command(self, command: int) -> None:
         """Send a raw WM_COMMAND code (service mpc_hc.send_command)."""
         await self.coordinator.async_command(command)
+
+    async def async_set_tmdb_id(
+        self,
+        tmdb_id: int | None = None,
+        media_type: str | None = None,
+        scope: str = SCOPE_SERIES,
+    ) -> None:
+        """Correct (or, without an ID, clear the correction of) the TMDb match."""
+        await self.coordinator.async_set_override(scope, tmdb_id, media_type)
