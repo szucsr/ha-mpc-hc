@@ -147,11 +147,6 @@
             "panscan_inc_width": {"name": "Pan & Scan szélességének növelése"},
             "panscan_dec_width": {"name": "Pan & Scan szélességének csökkentése"},
 
-            "ontop_never": {"name": "Mindig legfelül: soha"},
-            "ontop_always": {"name": "Mindig legfelül: mindig"},
-            "ontop_while_playing": {"name": "Mindig legfelül: lejátszás közben"},
-            "ontop_while_playing_video": {"name": "Mindig legfelül: videólejátszás közben"},
-
             "fullscreen": {"name": "Teljes képernyő (felbontásváltás nélkül)"},
             "exit": {"name": "MPC-HC bezárása"}
         },
@@ -161,7 +156,20 @@
         "select": {
             "video_frame": {
                 "name": "Videókeret",
-                "state": {"normal": "Normál", "inside": "Belül", "stretch": "Nyújtás"}
+                "state": {
+                    "normal": "Normál",
+                    "inside": "Belül",
+                    "stretch": "Nyújtás"
+                }
+            },
+            "always_on_top": {
+                "name": "Mindig legfelül",
+                "state": {
+                    "never": "Soha",
+                    "always": "Mindig",
+                    "while_playing": "Lejátszás közben",
+                    "while_playing_video": "Videólejátszás közben"
+                }
             }
         },
         "number": {

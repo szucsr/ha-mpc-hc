@@ -1,9 +1,11 @@
-"""Select platform: how the video is fitted into the player window."""
+"""Select platform: window and video settings (video frame mode, always on top)."""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
+from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.const import EntityCategory
-from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -20,33 +22,70 @@ FRAME_OPTIONS: dict[str, Cmd] = {
     "stretch": Cmd.FRAME_STRETCH,
 }
 
+ONTOP_OPTIONS: dict[str, Cmd] = {
+    "never": Cmd.ONTOP_NEVER,
+    "always": Cmd.ONTOP_ALWAYS,
+    "while_playing": Cmd.ONTOP_WHILE_PLAYING,
+    "while_playing_video": Cmd.ONTOP_WHILE_PLAYING_VIDEO,
+}
+
+
+@dataclass(frozen=True, kw_only=True)
+class MpcHcSelectDescription(SelectEntityDescription):
+    """Describes an MPC-HC select whose options each send one command."""
+
+    commands: dict[str, Cmd]  # option -> command
+    default: str  # assumed starting option
+
+
+SELECTS: tuple[MpcHcSelectDescription, ...] = (
+    MpcHcSelectDescription(
+        key="video_frame",
+        translation_key="video_frame",
+        entity_category=EntityCategory.CONFIG,
+        options=list(FRAME_OPTIONS),
+        commands=FRAME_OPTIONS,
+        default="inside",
+    ),
+    MpcHcSelectDescription(
+        key="always_on_top",
+        translation_key="always_on_top",
+        entity_category=EntityCategory.CONFIG,
+        options=list(ONTOP_OPTIONS),
+        commands=ONTOP_OPTIONS,
+        default="never",
+    ),
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: MpcHcConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the video frame select."""
-    async_add_entities([MpcHcVideoFrameSelect(entry.runtime_data)])
+    """Set up the video frame and always-on-top selects."""
+    coordinator = entry.runtime_data
+    async_add_entities(MpcHcSelect(coordinator, desc) for desc in SELECTS)
 
 
-class MpcHcVideoFrameSelect(SelectEntity, MpcHcEntity):
-    """Choose how the video is fitted into the player window."""
+class MpcHcSelect(SelectEntity, MpcHcEntity):
+    """A select that sends the command of the chosen option to MPC-HC."""
 
-    _attr_translation_key = "video_frame"
-    _attr_options = list(FRAME_OPTIONS)
-    _attr_entity_category = EntityCategory.CONFIG
-    # MPC-HC does not report the current frame mode, so the state is the last
-    # option chosen from Home Assistant
+    entity_description: MpcHcSelectDescription
+    # MPC-HC does not report these settings, so the state is the last option
+    # chosen from Home Assistant
     _attr_assumed_state = True
-    # Assumed starting mode; MPC-HC does not report the real one
-    _attr_current_option = "inside"
 
-    def __init__(self, coordinator: MpcHcCoordinator) -> None:
+    def __init__(
+        self, coordinator: MpcHcCoordinator, description: MpcHcSelectDescription
+    ) -> None:
         super().__init__(coordinator)
-        self._attr_unique_id = f"{self._entry_id}_video_frame"
+        self.entity_description = description
+        self._attr_unique_id = f"{self._entry_id}_{description.key}"
+        # Assumed starting option; MPC-HC does not report the real one
+        self._attr_current_option = description.default
 
     async def async_select_option(self, option: str) -> None:
-        await self.coordinator.async_command(FRAME_OPTIONS[option])
+        await self.coordinator.async_command(self.entity_description.commands[option])
         self._attr_current_option = option
         self.async_write_ha_state()

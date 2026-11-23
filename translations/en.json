@@ -147,11 +147,6 @@
             "panscan_inc_width": {"name": "Pan & Scan increase width"},
             "panscan_dec_width": {"name": "Pan & Scan decrease width"},
 
-            "ontop_never": {"name": "Always on top: never"},
-            "ontop_always": {"name": "Always on top: always"},
-            "ontop_while_playing": {"name": "Always on top: while playing"},
-            "ontop_while_playing_video": {"name": "Always on top: while playing video"},
-
             "fullscreen": {"name": "Fullscreen (no resolution change)"},
             "exit": {"name": "Exit MPC-HC"}
         },
@@ -161,7 +156,20 @@
         "select": {
             "video_frame": {
                 "name": "Video frame",
-                "state": {"normal": "Normal", "inside": "Inside", "stretch": "Stretch"}
+                "state": {
+                    "normal": "Normal",
+                    "inside": "Inside",
+                    "stretch": "Stretch"
+                }
+            },
+            "always_on_top": {
+                "name": "Always on top",
+                "state": {
+                    "never": "Never",
+                    "always": "Always",
+                    "while_playing": "While playing",
+                    "while_playing_video": "While playing video"
+                }
             }
         },
         "number": {

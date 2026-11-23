@@ -67,14 +67,9 @@ BUTTONS: tuple[MpcHcButtonDescription, ...] = (
     # Closes MPC-HC on the PC, so it is kept out of default dashboards
     _button("exit", Cmd.EXIT, **_CONFIG),
     # Pan & Scan size
-    _button("panscan_reset", Cmd.PANSCAN_RESET, **_CONFIG),
-    _button("panscan_inc_width", Cmd.PANSCAN_INC_WIDTH, **_CONFIG),
-    _button("panscan_dec_width", Cmd.PANSCAN_DEC_WIDTH, **_CONFIG),
-    # Always on top
-    _button("ontop_never", Cmd.ONTOP_NEVER, **_CONFIG),
-    _button("ontop_always", Cmd.ONTOP_ALWAYS, **_CONFIG),
-    _button("ontop_while_playing", Cmd.ONTOP_WHILE_PLAYING, **_CONFIG),
-    _button("ontop_while_playing_video", Cmd.ONTOP_WHILE_PLAYING_VIDEO, **_CONFIG),
+    _button("panscan_reset", Cmd.PANSCAN_RESET),
+    _button("panscan_inc_width", Cmd.PANSCAN_INC_WIDTH),
+    _button("panscan_dec_width", Cmd.PANSCAN_DEC_WIDTH),
 )
 
 async def async_setup_entry(
