@@ -35,19 +35,43 @@ _RESOLUTION_RE = re.compile(r"^(?:\d{3,4}[pi]|4k|uhd)$", re.IGNORECASE)
 _SOURCES = frozenset(
     {
         "dvdrip", "bdrip", "brrip", "bluray", "blu-ray", "webrip", "web-dl", "webdl", "hdtv", "dvdscr", "hdrip", "remux", "dvd",
+        "cam", "ts", "telesync", "tc", "telecine", "scr", "screener", "dvd-screener",
+        "vhsrip", "tvrip", "satrip", "sdtv", "pdtv", "dvbrip", "hr-hdtv",
+        "wp", "workprint", "r5", "retail5", "dvd9", "bd25", "bd50", "dvdr", "svcd", "vcd",
     }
 )
 # Streaming services act as markers but carry no information we keep
-_SERVICES = frozenset({"amzn", "nf", "dsnp", "hmax", "atvp"})
+_SERVICES = frozenset(
+    {
+        "amzn", "nf", "dsnp", "hmax", "atvp",
+        "tv2", "fmio", "hulu", "pcok", "hbon",
+    }
+)
 _CODECS = frozenset(
     {
         "x264", "x265", "h264", "h265", "hevc", "xvid", "divx", "avc", "aac", "ac3", "eac3", "dts", "truehd", "atmos", "10bit", "hdr", "hdr10", "proper", "repack", "internal",
+        "mpeg2",
     }
 )
 # Language tags seen in scene releases, mapped to ISO 639-1 codes
 _LANGUAGES = {
     "hun": "hu", "hundub": "hu", "hunsub": "hu",
     "eng": "en", "engdub": "en", "engsub": "en",
+    "ger": "de", "gerdub": "de", "gersub": "de",
+    "fre": "fr", "fredub": "fr", "fresub": "fr",
+    "ita": "it", "itadub": "it", "itasub": "it",
+    "spa": "es", "spadub": "es", "spasub": "es",
+    "por": "pt", "pordub": "pt", "porsub": "pt",
+    "rus": "ru", "rusdub": "ru", "russub": "ru",
+    "jpn": "ja", "jpndub": "ja", "jpnsub": "ja",
+    "chi": "zh", "chidub": "zh", "chisub": "zh",
+    "kor": "ko", "kordub": "ko", "korsub": "ko",
+    "pol": "pl", "poldub": "pl", "polsub": "pl",
+    "nld": "nl", "nlddub": "nl", "nldsub": "nl",
+    "swe": "sv", "swedub": "sv", "swesub": "sv",
+    "nor": "no", "nordub": "no", "norsub": "no",
+    "dan": "da", "dandub": "da", "dansub": "da",
+    "fin": "fi", "findub": "fi", "finsub": "fi",
 }
 
 # Words that stay lowercase in a title (except as the first word)
