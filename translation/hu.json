@@ -1,0 +1,312 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Add MPC-HC",
+                "menu_options": {
+                    "scan": "Scan the network for MPC-HC",
+                    "manual": "Enter the address manually"
+                }
+            },
+            "scan": {
+                "title": "Scan the network",
+                "description": "Home Assistant checks every address of its local network for an MPC-HC web interface on the port below. The scan starts when you submit this form and only connects to that port.\n\nThe PC must be on, and MPC-HC must have the web interface enabled with **\"Allow access from localhost only\"** unticked (*View → Options → Player → Web Interface*).\n\n⚠️ **Security warning:** the web server has no authentication or encryption. Consider allowing the port in the Windows firewall only for the Home Assistant IP address.",
+                "data": {
+                    "port": "Port to scan"
+                },
+                "data_description": {
+                    "port": "Default: 13579"
+                }
+            },
+            "select_device": {
+                "title": "Select the player",
+                "description": "These players were found. The name is used as the device name and in entity IDs.",
+                "data": {
+                    "host": "Player",
+                    "name": "Name"
+                }
+            },
+            "manual": {
+                "title": "Connect MPC-HC",
+                "description": "Enter the address of the PC that runs MPC-HC.\n\n**Setting up MPC-HC (once, on the PC):**\n1. *View → Options → Player → Web Interface*\n2. Tick **Listen on port** and set the port (default: 13579)\n3. **Untick \"Allow access from localhost only\".** If it stays enabled, only the PC itself can reach the web server, not Home Assistant.\n\n⚠️ **Security warning:** the web server has no authentication or encryption. Once the localhost restriction is lifted, anyone on the network can control the player and see the screenshot. Consider allowing the port in the Windows firewall only for the Home Assistant IP address.",
+                "data": {
+                    "name": "Name",
+                    "host": "IP address or host name",
+                    "port": "Port"
+                },
+                "data_description": {
+                    "name": "Shown as the device name and used in entity IDs, e.g. \"MPC-HC Living room\"",
+                    "host": "Default: 127.0.0.1 (only right if Home Assistant and MPC-HC run on the same machine)",
+                    "port": "Default: 13579"
+                }
+            },
+            "reconfigure": {
+                "title": "Reconfigure MPC-HC",
+                "description": "Change the name or the address of the PC. Entities and history are kept.",
+                "data": {
+                    "name": "Name",
+                    "host": "IP address or host name",
+                    "port": "Port"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "No response. Check that the PC is on, MPC-HC is running with the web interface enabled, and that the IP, port and firewall are correct.",
+            "localhost_only": "MPC-HC accepted the connection but closed it immediately. This usually means 'Allow access from localhost only' is still enabled (View → Options → Player → Web Interface).",
+            "not_mpc_hc": "The address responds, but it does not look like the MPC-HC web interface.",
+            "already_configured": "An MPC-HC with this host and port is already added.",
+            "no_devices_found": "No MPC-HC found. Check that the PC is on, MPC-HC is running with the web interface enabled, and that the Windows firewall allows the port. You can also enter the address manually.",
+            "localhost_only_found": "Something accepts connections on this port but closes them right away. This is probably MPC-HC with 'Allow access from localhost only' enabled (View → Options → Player → Web Interface).",
+            "all_configured": "Every player that was found is already added."
+        },
+        "abort": {
+            "reconfigure_successful": "Reconfiguration was successful."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "TMDb settings",
+                "description": "Cover art, descriptions and episode titles come from TMDb. The token and the language are shared by all your MPC-HC players.\n\nSaved token: {token_state}\n\nCreate a free account at themoviedb.org and copy the *API Read Access Token* from Settings → API. Without a token everything works, only the TMDb details are missing.\n\nThis product uses the TMDB API but is not endorsed or certified by TMDB.",
+                "data": {
+                    "tmdb_token": "API Read Access Token",
+                    "remove_token": "Remove the saved token",
+                    "tmdb_language": "Language"
+                },
+                "data_description": {
+                    "tmdb_token": "Leave empty to keep the saved token.",
+                    "tmdb_language": "For example hu-HU or en-US. Leave empty to use the Home Assistant language."
+                }
+            }
+        },
+        "error": {
+            "invalid_token": "TMDb rejected this token.",
+            "tmdb_unreachable": "TMDb could not be reached. Try again later.",
+            "invalid_language": "Use a language code such as hu-HU or en-US."
+        }
+    },
+    "exceptions": {
+        "no_media": {
+            "message": "Nothing is playing, so there is no file to apply this to."
+        },
+        "no_title": {
+            "message": "No title could be recognised from this file name. Use \"This file only\" instead."
+        },
+        "media_type_required": {
+            "message": "Choose the media type (TV show or movie) together with the TMDb ID."
+        }
+    },
+    "selector": {
+        "media_type": {
+            "options": {
+                "tv": "TV show",
+                "movie": "Movie"
+            }
+        },
+        "scope": {
+            "options": {
+                "series": "All files with this title",
+                "file": "This file only"
+            }
+        }
+    },
+    "services": {
+        "send_command": {
+            "name": "Send command",
+            "description": "Sends a raw MPC-HC command code (WM_COMMAND) to the player.",
+            "fields": {
+                "command": {
+                    "name": "Command",
+                    "description": "The numeric command code, e.g. 956 for subtitles on/off."
+                }
+            }
+        },
+        "set_tmdb_id": {
+            "name": "Set TMDb ID",
+            "description": "Corrects a wrong TMDb match. The ID is the number in the item's TMDb address (themoviedb.org/tv/1234-title means ID 1234). Leave the ID empty to remove a correction.",
+            "fields": {
+                "tmdb_id": {
+                    "name": "TMDb ID",
+                    "description": "The TMDb ID of the correct series or movie."
+                },
+                "media_type": {
+                    "name": "Media type",
+                    "description": "Whether the ID belongs to a TV show or a movie."
+                },
+                "scope": {
+                    "name": "Applies to",
+                    "description": "All files with the recognised title, or only the file that is playing now."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "file": {
+                "name": "File"
+            },
+            "file_size": {
+                "name": "File size"
+            },
+            "player_state": {
+                "name": "Player state"
+            },
+            "position": {
+                "name": "Position"
+            },
+            "duration": {
+                "name": "Duration"
+            },
+            "playback_rate": {
+                "name": "Playback speed"
+            },
+            "title": {
+                "name": "Title"
+            },
+            "episode_title": {
+                "name": "Episode title"
+            },
+            "season": {
+                "name": "Season"
+            },
+            "episode": {
+                "name": "Episode"
+            },
+            "version": {
+                "name": "Version"
+            }
+        },
+        "button": {
+            "jump_back_small": {
+                "name": "Jump back (small)"
+            },
+            "jump_forward_small": {
+                "name": "Jump forward (small)"
+            },
+            "jump_back_medium": {
+                "name": "Jump back (medium)"
+            },
+            "jump_forward_medium": {
+                "name": "Jump forward (medium)"
+            },
+            "jump_back_large": {
+                "name": "Jump back (large)"
+            },
+            "jump_forward_large": {
+                "name": "Jump forward (large)"
+            },
+            "jump_back_keyframe": {
+                "name": "Jump back (keyframe)"
+            },
+            "jump_forward_keyframe": {
+                "name": "Jump forward (keyframe)"
+            },
+            "jump_to_beginning": {
+                "name": "Jump to beginning"
+            },
+            "increase_rate": {
+                "name": "Increase playback speed"
+            },
+            "decrease_rate": {
+                "name": "Decrease playback speed"
+            },
+            "reset_rate": {
+                "name": "Reset playback speed"
+            },
+            "audio_previous": {
+                "name": "Previous audio track"
+            },
+            "audio_next": {
+                "name": "Next audio track"
+            },
+            "audio_delay_decrease": {
+                "name": "Decrease audio delay (10 ms)"
+            },
+            "audio_delay_increase": {
+                "name": "Increase audio delay (10 ms)"
+            },
+            "subtitle_toggle": {
+                "name": "Toggle subtitles"
+            },
+            "subtitle_previous": {
+                "name": "Previous subtitle track"
+            },
+            "subtitle_next": {
+                "name": "Next subtitle track"
+            },
+            "subtitle_goto_previous": {
+                "name": "Go to previous subtitle line"
+            },
+            "subtitle_goto_next": {
+                "name": "Go to next subtitle line"
+            },
+            "subtitle_delay_decrease": {
+                "name": "Decrease subtitle delay"
+            },
+            "subtitle_delay_increase": {
+                "name": "Increase subtitle delay"
+            },
+            "panscan_reset": {
+                "name": "Pan & Scan reset"
+            },
+            "panscan_inc_width": {
+                "name": "Pan & Scan increase width"
+            },
+            "panscan_dec_width": {
+                "name": "Pan & Scan decrease width"
+            },
+            "fullscreen": {
+                "name": "Fullscreen (no resolution change)"
+            },
+            "exit": {
+                "name": "Exit MPC-HC"
+            }
+        },
+        "switch": {
+            "muted": {
+                "name": "Muted"
+            }
+        },
+        "select": {
+            "video_frame": {
+                "name": "Video frame",
+                "state": {
+                    "normal": "Normal",
+                    "inside": "Inside",
+                    "stretch": "Stretch"
+                }
+            },
+            "always_on_top": {
+                "name": "Always on top",
+                "state": {
+                    "never": "Never",
+                    "always": "Always",
+                    "while_playing": "While playing",
+                    "while_playing_video": "While playing video"
+                }
+            }
+        },
+        "number": {
+            "volume": {
+                "name": "Volume"
+            },
+            "seek": {
+                "name": "Seek position"
+            }
+        },
+        "image": {
+            "snapshot": {
+                "name": "Snapshot"
+            },
+            "poster": {
+                "name": "Poster"
+            },
+            "backdrop": {
+                "name": "Backdrop"
+            },
+            "episode_still": {
+                "name": "Episode picture"
+            }
+        }
+    }
+}
