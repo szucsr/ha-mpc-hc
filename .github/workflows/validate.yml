@@ -11,6 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Stage integration under custom_components/mpc_hc
+        run: |
+          mkdir -p custom_components/mpc_hc
+          for item in *; do
+            case "$item" in
+              custom_components|docs|scripts) continue ;;
+              *) mv "$item" custom_components/mpc_hc/ ;;
+            esac
+          done
       - uses: home-assistant/actions/hassfest@master
 
   ruff:
