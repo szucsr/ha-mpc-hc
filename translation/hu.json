@@ -1,312 +1,312 @@
 {
     "config": {
         "step": {
-            "user": {
-                "title": "Add MPC-HC",
-                "menu_options": {
-                    "scan": "Scan the network for MPC-HC",
-                    "manual": "Enter the address manually"
-                }
-            },
-            "scan": {
-                "title": "Scan the network",
-                "description": "Home Assistant checks every address of its local network for an MPC-HC web interface on the port below. The scan starts when you submit this form and only connects to that port.\n\nThe PC must be on, and MPC-HC must have the web interface enabled with **\"Allow access from localhost only\"** unticked (*View → Options → Player → Web Interface*).\n\n⚠️ **Security warning:** the web server has no authentication or encryption. Consider allowing the port in the Windows firewall only for the Home Assistant IP address.",
-                "data": {
-                    "port": "Port to scan"
-                },
-                "data_description": {
-                    "port": "Default: 13579"
-                }
-            },
-            "select_device": {
-                "title": "Select the player",
-                "description": "These players were found. The name is used as the device name and in entity IDs.",
-                "data": {
-                    "host": "Player",
-                    "name": "Name"
-                }
-            },
-            "manual": {
-                "title": "Connect MPC-HC",
-                "description": "Enter the address of the PC that runs MPC-HC.\n\n**Setting up MPC-HC (once, on the PC):**\n1. *View → Options → Player → Web Interface*\n2. Tick **Listen on port** and set the port (default: 13579)\n3. **Untick \"Allow access from localhost only\".** If it stays enabled, only the PC itself can reach the web server, not Home Assistant.\n\n⚠️ **Security warning:** the web server has no authentication or encryption. Once the localhost restriction is lifted, anyone on the network can control the player and see the screenshot. Consider allowing the port in the Windows firewall only for the Home Assistant IP address.",
-                "data": {
-                    "name": "Name",
-                    "host": "IP address or host name",
-                    "port": "Port"
-                },
-                "data_description": {
-                    "name": "Shown as the device name and used in entity IDs, e.g. \"MPC-HC Living room\"",
-                    "host": "Default: 127.0.0.1 (only right if Home Assistant and MPC-HC run on the same machine)",
-                    "port": "Default: 13579"
-                }
-            },
-            "reconfigure": {
-                "title": "Reconfigure MPC-HC",
-                "description": "Change the name or the address of the PC. Entities and history are kept.",
-                "data": {
-                    "name": "Name",
-                    "host": "IP address or host name",
-                    "port": "Port"
-                }
+        "user": {
+            "title": "MPC-HC hozzáadása",
+            "menu_options": {
+                "scan": "Keresés a hálózaton",
+                "manual": "Megadás kézzel"
             }
         },
+        "scan": {
+            "title": "Keresés a hálózaton",
+            "description": "A Home Assistant a helyi hálózat minden címén megnézi, elérhető-e MPC-HC webes felület az alábbi porton. A keresés az űrlap elküldésekor indul, és csak ezen a porton próbál kapcsolódni.\n\nA számítógépnek be kell lennie kapcsolva, az MPC-HC-ben pedig engedélyezni kell a webes felületet, és ki kell kapcsolni az **„Allow access from localhost only”** beállítást (*View → Options → Player → Web Interface*).\n\n⚠️ **Biztonsági figyelmeztetés:** a webszerver nem használ hitelesítést és titkosítást. Érdemes a portot a Windows tűzfalban csak a Home Assistant IP-címére engedélyezni.",
+            "data": {
+                "port": "Keresendő port"
+            },
+            "data_description": {
+                "port": "Alapértelmezés: 13579"
+            }
+        },
+        "select_device": {
+            "title": "Lejátszó kiválasztása",
+            "description": "A következő lejátszókat találtam. A név lesz az eszköz neve, és ebből képződnek az entitásazonosítók is.",
+            "data": {
+                "host": "Lejátszó",
+                "name": "Név"
+            }
+        },
+        "manual": {
+            "title": "MPC-HC csatlakoztatása",
+            "description": "Add meg annak a számítógépnek a címét, amelyen az MPC-HC fut.\n\n**Az MPC-HC beállítása (egyszer, a számítógépen):**\n1. *View → Options → Player → Web Interface*\n2. Jelöld be a **Listen on port** opciót, és add meg a portot (alapértelmezés: 13579).\n3. **Kapcsold ki az „Allow access from localhost only” opciót.** Ha bekapcsolva marad, a webszervert csak maga a számítógép éri el, a Home Assistant nem.\n\n⚠️ **Biztonsági figyelmeztetés:** a webszerver nem használ hitelesítést és titkosítást. A helyi hozzáférési korlátozás feloldása után a hálózaton bárki vezérelheti a lejátszót, és láthatja a pillanatképet. Érdemes a portot a Windows tűzfalban csak a Home Assistant IP-címére engedélyezni.",
+            "data": {
+                "name": "Név",
+                "host": "IP-cím vagy hosztnév",
+                "port": "Port"
+            },
+            "data_description": {
+                "name": "Az eszköz neve és az entitásazonosítók alapja, például „MPC-HC Nappali”",
+                "host": "Alapértelmezés: 127.0.0.1 (csak akkor jó, ha a Home Assistant és az MPC-HC ugyanazon a gépen fut)",
+                "port": "Alapértelmezés: 13579"
+            }
+        },
+        "reconfigure": {
+            "title": "MPC-HC újrakonfigurálása",
+            "description": "A név és a számítógép címe módosítható. Az entitások és az előzmények megmaradnak.",
+            "data": {
+                "name": "Név",
+                "host": "IP-cím vagy hosztnév",
+                "port": "Port"
+            }
+        }
+        },
         "error": {
-            "cannot_connect": "No response. Check that the PC is on, MPC-HC is running with the web interface enabled, and that the IP, port and firewall are correct.",
-            "localhost_only": "MPC-HC accepted the connection but closed it immediately. This usually means 'Allow access from localhost only' is still enabled (View → Options → Player → Web Interface).",
-            "not_mpc_hc": "The address responds, but it does not look like the MPC-HC web interface.",
-            "already_configured": "An MPC-HC with this host and port is already added.",
-            "no_devices_found": "No MPC-HC found. Check that the PC is on, MPC-HC is running with the web interface enabled, and that the Windows firewall allows the port. You can also enter the address manually.",
-            "localhost_only_found": "Something accepts connections on this port but closes them right away. This is probably MPC-HC with 'Allow access from localhost only' enabled (View → Options → Player → Web Interface).",
-            "all_configured": "Every player that was found is already added."
+        "cannot_connect": "Nincs válasz. Ellenőrizd, hogy a számítógép be van-e kapcsolva, fut-e az MPC-HC engedélyezett webes felülettel, és helyes-e az IP-cím, a port és a tűzfalbeállítás.",
+        "localhost_only": "Az MPC-HC fogadta a kapcsolatot, de azonnal lezárta. Ez általában azt jelenti, hogy az „Allow access from localhost only” beállítás még be van kapcsolva (View → Options → Player → Web Interface).",
+        "not_mpc_hc": "A cím válaszol, de nem MPC-HC webes felületnek tűnik.",
+        "already_configured": "Ezzel a címmel és porttal már hozzá van adva egy MPC-HC.",
+        "no_devices_found": "Nem található MPC-HC. Ellenőrizd, hogy a számítógép be van-e kapcsolva, fut-e az MPC-HC engedélyezett webes felülettel, és engedélyezi-e a Windows tűzfal a portot. A címet kézzel is megadhatod.",
+        "localhost_only_found": "Valami elfogadja a kapcsolatot ezen a porton, de azonnal lezárja. Valószínűleg ez az MPC-HC bekapcsolt „Allow access from localhost only” beállítással (View → Options → Player → Web Interface).",
+        "all_configured": "Az összes megtalált lejátszó már hozzá van adva."
         },
         "abort": {
-            "reconfigure_successful": "Reconfiguration was successful."
+        "reconfigure_successful": "Az újrakonfigurálás sikeres volt."
         }
     },
     "options": {
         "step": {
-            "init": {
-                "title": "TMDb settings",
-                "description": "Cover art, descriptions and episode titles come from TMDb. The token and the language are shared by all your MPC-HC players.\n\nSaved token: {token_state}\n\nCreate a free account at themoviedb.org and copy the *API Read Access Token* from Settings → API. Without a token everything works, only the TMDb details are missing.\n\nThis product uses the TMDB API but is not endorsed or certified by TMDB.",
-                "data": {
-                    "tmdb_token": "API Read Access Token",
-                    "remove_token": "Remove the saved token",
-                    "tmdb_language": "Language"
-                },
-                "data_description": {
-                    "tmdb_token": "Leave empty to keep the saved token.",
-                    "tmdb_language": "For example hu-HU or en-US. Leave empty to use the Home Assistant language."
-                }
+        "init": {
+            "title": "TMDb-beállítások",
+            "description": "A borítóképek, leírások és epizódcímek a TMDb-ről (The Movie Database) érkeznek. A token és a nyelv az összes MPC-HC lejátszóra érvényes.\n\nMentett token: {token_state}\n\nRegisztrálj egy ingyenes fiókot a themoviedb.org oldalán, majd a Beállítások → API oldalról másold ki az *API olvasási hozzáférési azonosító* értékét. Token nélkül is minden működik, csak a TMDb-ből származó adatok hiányoznak.\n\nThis product uses the TMDB API but is not endorsed or certified by TMDB.",
+            "data": {
+                "tmdb_token": "API olvasási hozzáférési azonosító",
+                "remove_token": "A mentett token törlése",
+                "tmdb_language": "Nyelv"
+            },
+            "data_description": {
+                "tmdb_token": "Üresen hagyva a mentett token megmarad.",
+                "tmdb_language": "Például hu-HU vagy en-US. Üresen hagyva a Home Assistant (vagyis nem a felhasználó) nyelve érvényesül."
             }
+        }
         },
         "error": {
-            "invalid_token": "TMDb rejected this token.",
-            "tmdb_unreachable": "TMDb could not be reached. Try again later.",
-            "invalid_language": "Use a language code such as hu-HU or en-US."
-        }
-    },
-    "exceptions": {
-        "no_media": {
-            "message": "Nothing is playing, so there is no file to apply this to."
-        },
-        "no_title": {
-            "message": "No title could be recognised from this file name. Use \"This file only\" instead."
-        },
-        "media_type_required": {
-            "message": "Choose the media type (TV show or movie) together with the TMDb ID."
-        }
-    },
-    "selector": {
-        "media_type": {
-            "options": {
-                "tv": "TV show",
-                "movie": "Movie"
-            }
-        },
-        "scope": {
-            "options": {
-                "series": "All files with this title",
-                "file": "This file only"
-            }
+        "invalid_token": "A TMDb elutasította ezt a tokent.",
+        "tmdb_unreachable": "A TMDb nem érhető el. Próbáld újra később.",
+        "invalid_language": "Adj meg nyelvkódot, például hu-HU vagy en-US formátumban."
         }
     },
     "services": {
         "send_command": {
-            "name": "Send command",
-            "description": "Sends a raw MPC-HC command code (WM_COMMAND) to the player.",
-            "fields": {
-                "command": {
-                    "name": "Command",
-                    "description": "The numeric command code, e.g. 956 for subtitles on/off."
-                }
+        "name": "Parancs küldése",
+        "description": "Közvetlenül elküld egy MPC-HC parancskódot (WM_COMMAND) a lejátszónak.",
+        "fields": {
+            "command": {
+                "name": "Parancskód",
+                "description": "A parancs számkódja, például 956 a feliratok be- és kikapcsolásához."
             }
+        }
         },
         "set_tmdb_id": {
-            "name": "Set TMDb ID",
-            "description": "Corrects a wrong TMDb match. The ID is the number in the item's TMDb address (themoviedb.org/tv/1234-title means ID 1234). Leave the ID empty to remove a correction.",
-            "fields": {
-                "tmdb_id": {
-                    "name": "TMDb ID",
-                    "description": "The TMDb ID of the correct series or movie."
-                },
-                "media_type": {
-                    "name": "Media type",
-                    "description": "Whether the ID belongs to a TV show or a movie."
-                },
-                "scope": {
-                    "name": "Applies to",
-                    "description": "All files with the recognised title, or only the file that is playing now."
-                }
+        "name": "TMDb-azonosító megadása",
+        "description": "Javítja a hibás TMDb-egyezést. Az azonosító az adott elem TMDb-oldalának címében szereplő szám (a themoviedb.org/tv/1234-cim cím esetén 1234). Az azonosító üresen hagyásával a korábbi javítás törölhető.",
+        "fields": {
+            "tmdb_id": {
+                "name": "TMDb-azonosító",
+                "description": "A helyes sorozat vagy film TMDb-azonosítója."
+            },
+            "media_type": {
+                "name": "Médiatípus",
+                "description": "Az azonosító sorozathoz vagy filmhez tartozik."
+            },
+            "scope": {
+                "name": "Hatókör",
+                "description": "A felismert című összes fájl, vagy csak az éppen játszott fájl."
             }
+        }
+        }
+    },
+    "exceptions": {
+        "no_media": {
+        "message": "Jelenleg nem megy lejátszás, ezért nincs fájl, amelyre a művelet vonatkozhatna."
+        },
+        "no_title": {
+        "message": "A fájlnévből nem ismerhető fel cím. Válaszd inkább a „Csak ez a fájl” hatókört."
+        },
+        "media_type_required": {
+        "message": "A TMDb-azonosító mellé a médiatípust is meg kell adni (sorozat vagy film)."
+        }
+    },
+    "selector": {
+        "media_type": {
+        "options": {
+            "tv": "Sorozat",
+            "movie": "Film"
+        }
+        },
+        "scope": {
+        "options": {
+            "series": "Az összes ilyen című fájl",
+            "file": "Csak ez a fájl"
+        }
         }
     },
     "entity": {
         "sensor": {
-            "file": {
-                "name": "File"
-            },
-            "file_size": {
-                "name": "File size"
-            },
-            "player_state": {
-                "name": "Player state"
-            },
-            "position": {
-                "name": "Position"
-            },
-            "duration": {
-                "name": "Duration"
-            },
-            "playback_rate": {
-                "name": "Playback speed"
-            },
-            "title": {
-                "name": "Title"
-            },
-            "episode_title": {
-                "name": "Episode title"
-            },
-            "season": {
-                "name": "Season"
-            },
-            "episode": {
-                "name": "Episode"
-            },
-            "version": {
-                "name": "Version"
-            }
+        "file": {
+            "name": "Fájl"
+        },
+        "file_size": {
+            "name": "Fájlméret"
+        },
+        "player_state": {
+            "name": "Lejátszó állapota"
+        },
+        "position": {
+            "name": "Pozíció"
+        },
+        "duration": {
+            "name": "Időtartam"
+        },
+        "playback_rate": {
+            "name": "Lejátszási sebesség"
+        },
+        "title": {
+            "name": "Cím"
+        },
+        "episode_title": {
+            "name": "Epizódcím"
+        },
+        "season": {
+            "name": "Évad"
+        },
+        "episode": {
+            "name": "Epizód"
+        },
+        "version": {
+            "name": "Verzió"
+        }
         },
         "button": {
-            "jump_back_small": {
-                "name": "Jump back (small)"
-            },
-            "jump_forward_small": {
-                "name": "Jump forward (small)"
-            },
-            "jump_back_medium": {
-                "name": "Jump back (medium)"
-            },
-            "jump_forward_medium": {
-                "name": "Jump forward (medium)"
-            },
-            "jump_back_large": {
-                "name": "Jump back (large)"
-            },
-            "jump_forward_large": {
-                "name": "Jump forward (large)"
-            },
-            "jump_back_keyframe": {
-                "name": "Jump back (keyframe)"
-            },
-            "jump_forward_keyframe": {
-                "name": "Jump forward (keyframe)"
-            },
-            "jump_to_beginning": {
-                "name": "Jump to beginning"
-            },
-            "increase_rate": {
-                "name": "Increase playback speed"
-            },
-            "decrease_rate": {
-                "name": "Decrease playback speed"
-            },
-            "reset_rate": {
-                "name": "Reset playback speed"
-            },
-            "audio_previous": {
-                "name": "Previous audio track"
-            },
-            "audio_next": {
-                "name": "Next audio track"
-            },
-            "audio_delay_decrease": {
-                "name": "Decrease audio delay (10 ms)"
-            },
-            "audio_delay_increase": {
-                "name": "Increase audio delay (10 ms)"
-            },
-            "subtitle_toggle": {
-                "name": "Toggle subtitles"
-            },
-            "subtitle_previous": {
-                "name": "Previous subtitle track"
-            },
-            "subtitle_next": {
-                "name": "Next subtitle track"
-            },
-            "subtitle_goto_previous": {
-                "name": "Go to previous subtitle line"
-            },
-            "subtitle_goto_next": {
-                "name": "Go to next subtitle line"
-            },
-            "subtitle_delay_decrease": {
-                "name": "Decrease subtitle delay"
-            },
-            "subtitle_delay_increase": {
-                "name": "Increase subtitle delay"
-            },
-            "panscan_reset": {
-                "name": "Pan & Scan reset"
-            },
-            "panscan_inc_width": {
-                "name": "Pan & Scan increase width"
-            },
-            "panscan_dec_width": {
-                "name": "Pan & Scan decrease width"
-            },
-            "fullscreen": {
-                "name": "Fullscreen (no resolution change)"
-            },
-            "exit": {
-                "name": "Exit MPC-HC"
-            }
+        "jump_back_small": {
+            "name": "Ugrás hátra (kis lépés)"
+        },
+        "jump_forward_small": {
+            "name": "Ugrás előre (kis lépés)"
+        },
+        "jump_back_medium": {
+            "name": "Ugrás hátra (közepes lépés)"
+        },
+        "jump_forward_medium": {
+            "name": "Ugrás előre (közepes lépés)"
+        },
+        "jump_back_large": {
+            "name": "Ugrás hátra (nagy lépés)"
+        },
+        "jump_forward_large": {
+            "name": "Ugrás előre (nagy lépés)"
+        },
+        "jump_back_keyframe": {
+            "name": "Ugrás az előző kulcskockára"
+        },
+        "jump_forward_keyframe": {
+            "name": "Ugrás a következő kulcskockára"
+        },
+        "jump_to_beginning": {
+            "name": "Ugrás az elejére"
+        },
+        "increase_rate": {
+            "name": "Lejátszási sebesség növelése"
+        },
+        "decrease_rate": {
+            "name": "Lejátszási sebesség csökkentése"
+        },
+        "reset_rate": {
+            "name": "Lejátszási sebesség alaphelyzetbe állítása"
+        },
+        "audio_previous": {
+            "name": "Előző hangsáv"
+        },
+        "audio_next": {
+            "name": "Következő hangsáv"
+        },
+        "audio_delay_decrease": {
+            "name": "Hangkésleltetés csökkentése (−10 ms)"
+        },
+        "audio_delay_increase": {
+            "name": "Hangkésleltetés növelése (+10 ms)"
+        },
+        "subtitle_toggle": {
+            "name": "Feliratok be-/kikapcsolása"
+        },
+        "subtitle_previous": {
+            "name": "Előző feliratsáv"
+        },
+        "subtitle_next": {
+            "name": "Következő feliratsáv"
+        },
+        "subtitle_goto_previous": {
+            "name": "Ugrás az előző feliratsorra"
+        },
+        "subtitle_goto_next": {
+            "name": "Ugrás a következő feliratsorra"
+        },
+        "subtitle_delay_decrease": {
+            "name": "Feliratkésleltetés csökkentése"
+        },
+        "subtitle_delay_increase": {
+            "name": "Feliratkésleltetés növelése"
+        },
+        "panscan_reset": {
+            "name": "Pan & Scan alaphelyzetbe állítása"
+        },
+        "panscan_inc_width": {
+            "name": "Pan & Scan szélességének növelése"
+        },
+        "panscan_dec_width": {
+            "name": "Pan & Scan szélességének csökkentése"
+        },
+        "fullscreen": {
+            "name": "Teljes képernyő (felbontásváltás nélkül)"
+        },
+        "exit": {
+            "name": "MPC-HC bezárása"
+        }
         },
         "switch": {
-            "muted": {
-                "name": "Muted"
-            }
+        "muted": {
+            "name": "Némítva"
+        }
         },
         "select": {
-            "video_frame": {
-                "name": "Video frame",
-                "state": {
-                    "normal": "Normal",
-                    "inside": "Inside",
-                    "stretch": "Stretch"
-                }
-            },
-            "always_on_top": {
-                "name": "Always on top",
-                "state": {
-                    "never": "Never",
-                    "always": "Always",
-                    "while_playing": "While playing",
-                    "while_playing_video": "While playing video"
-                }
+        "video_frame": {
+            "name": "Videókeret",
+            "state": {
+                "normal": "Normál",
+                "inside": "Belül",
+                "stretch": "Nyújtás"
             }
+        },
+        "always_on_top": {
+            "name": "Mindig legfelül",
+            "state": {
+                "never": "Soha",
+                "always": "Mindig",
+                "while_playing": "Lejátszás közben",
+                "while_playing_video": "Videólejátszás közben"
+            }
+        }
         },
         "number": {
-            "volume": {
-                "name": "Volume"
-            },
-            "seek": {
-                "name": "Seek position"
-            }
+        "volume": {
+            "name": "Hangerő"
+        },
+        "seek": {
+            "name": "Lejátszási pozíció"
+        }
         },
         "image": {
-            "snapshot": {
-                "name": "Snapshot"
-            },
-            "poster": {
-                "name": "Poster"
-            },
-            "backdrop": {
-                "name": "Backdrop"
-            },
-            "episode_still": {
-                "name": "Episode picture"
-            }
+        "snapshot": {
+            "name": "Pillanatkép"
+        },
+        "poster": {
+            "name": "Poszter"
+        },
+        "backdrop": {
+            "name": "Háttérkép"
+        },
+        "episode_still": {
+            "name": "Epizódkép"
+        }
         }
     }
 }
