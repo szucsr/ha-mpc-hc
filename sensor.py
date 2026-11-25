@@ -56,14 +56,12 @@ SENSORS: tuple[MpcHcSensorDescription, ...] = (
         key="file",
         translation_key="file",
         value_fn=lambda c: _clip(c.data.file),
-        attrs_fn=lambda c: {"path": c.data.filepath or None},
-    ),
-    MpcHcSensorDescription(
-        key="directory",
-        translation_key="directory",
-        # State: the last folder only; the full path stays in the attribute
-        value_fn=lambda c: _clip(c.data.folder_name),
-        attrs_fn=lambda c: {"path": c.data.filedir or None},
+        # The folder name and the full path are attributes, so no separate
+        # sensor is needed for them
+        attrs_fn=lambda c: {
+            "directory": c.data.folder_name or None,
+            "path": c.data.filepath or None,
+        },
     ),
     MpcHcSensorDescription(
         key="player_state",

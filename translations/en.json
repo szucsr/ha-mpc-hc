@@ -103,17 +103,16 @@
     "entity": {
         "sensor": {
             "file": {"name": "File"},
-            "directory": {"name": "Directory"},
+            "file_size": {"name": "File size"},
             "player_state": {"name": "Player state"},
             "position": {"name": "Position"},
             "duration": {"name": "Duration"},
             "playback_rate": {"name": "Playback speed"},
-            "file_size": {"name": "File size"},
-            "version": {"name": "Version"},
             "title": {"name": "Title"},
             "episode_title": {"name": "Episode title"},
             "season": {"name": "Season"},
-            "episode": {"name": "Episode"}
+            "episode": {"name": "Episode"},
+            "version": {"name": "Version"}
         },
         "button": {
             "jump_back_small": {"name": "Jump back (small)"},
@@ -132,16 +131,16 @@
 
             "audio_previous": {"name": "Previous audio track"},
             "audio_next": {"name": "Next audio track"},
-            "audio_delay_decrease": {"name": "Audio delay -10 ms"},
-            "audio_delay_increase": {"name": "Audio delay +10 ms"},
+            "audio_delay_decrease": {"name": "Decrease audio delay (10 ms)"},
+            "audio_delay_increase": {"name": "Increase audio delay (10 ms)"},
 
             "subtitle_toggle": {"name": "Toggle subtitles"},
             "subtitle_previous": {"name": "Previous subtitle track"},
             "subtitle_next": {"name": "Next subtitle track"},
             "subtitle_goto_previous": {"name": "Go to previous subtitle line"},
             "subtitle_goto_next": {"name": "Go to next subtitle line"},
-            "subtitle_delay_decrease": {"name": "Subtitle delay -"},
-            "subtitle_delay_increase": {"name": "Subtitle delay +"},
+            "subtitle_delay_decrease": {"name": "Decrease subtitle delay"},
+            "subtitle_delay_increase": {"name": "Increase subtitle delay"},
 
             "panscan_reset": {"name": "Pan & Scan reset"},
             "panscan_inc_width": {"name": "Pan & Scan increase width"},

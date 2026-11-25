@@ -103,17 +103,16 @@
     "entity": {
         "sensor": {
             "file": {"name": "Fájl"},
-            "directory": {"name": "Mappa"},
+            "file_size": {"name": "Fájlméret"},
             "player_state": {"name": "Lejátszó állapota"},
             "position": {"name": "Pozíció"},
             "duration": {"name": "Időtartam"},
             "playback_rate": {"name": "Lejátszási sebesség"},
-            "file_size": {"name": "Fájlméret"},
-            "version": {"name": "Verzió"},
             "title": {"name": "Cím"},
+            "episode_title": {"name": "Epizódcím"},
             "season": {"name": "Évad"},
             "episode": {"name": "Epizód"},
-            "episode_title": {"name": "Epizódcím"}
+            "version": {"name": "Verzió"}
         },
         "button": {
             "jump_back_small": {"name": "Ugrás hátra (kis lépés)"},
@@ -174,7 +173,7 @@
         },
         "number": {
             "volume": {"name": "Hangerő"},
-            "seek": {"name": "Pozíció (csúszka)"}
+            "seek": {"name": "Lejátszási pozíció"}
         },
         "image": {
             "snapshot": {"name": "Pillanatkép"},
