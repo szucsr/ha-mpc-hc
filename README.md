@@ -450,4 +450,4 @@ Issues and pull requests are welcome. Please read the [AI policy](AI_POLICY.md) 
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE.md)
