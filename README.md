@@ -435,10 +435,9 @@ Logs and facts get you help much faster than a description alone.
 - The state is polled every 2 seconds while playing and every 10 seconds otherwise. Commands refresh it right away.
 - The position and the seek slider move in steps of 5 seconds while playing.
 
-## Translations
+## Translations [![Crowdin](https://badges.crowdin.net/ha-mpc-hc/localized.svg)](https://crowdin.com)
 
 The integration is available in English and Hungarian. Do you want to add a language or improve one? The translations are managed on Crowdin, which makes it easy to contribute.
-
 [Translate this integration on Crowdin](https://crowdin.com/project/ha-mpc-hc/invite?h=88ef6fc89841c28aa46ee0d44850be032951041)
 
 ## About MPC-HC

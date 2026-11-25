@@ -9,11 +9,11 @@
 from __future__ import annotations
 
 import ipaddress
-import voluptuous as vol
 import re
 from collections.abc import Mapping
 from typing import Any
 
+import voluptuous as vol
 from homeassistant.components import network
 from homeassistant.config_entries import (
     ConfigEntry,
@@ -53,7 +53,6 @@ from .const import (
 from .discovery import DiscoveredPlayer, async_scan
 from .shared import get_shared
 from .tmdb import TmdbClient, TmdbError
-
 
 PORT_VALIDATOR = vol.All(vol.Coerce(int), vol.Range(min=1, max=65535))
 LANGUAGE_RE = re.compile(r"^[a-z]{2}(-[A-Z]{2})?$")

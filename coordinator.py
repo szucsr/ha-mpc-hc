@@ -133,7 +133,7 @@ class MpcHcCoordinator(DataUpdateCoordinator[MpcHcStatus]):
             metadata = await async_fetch_metadata(
                 client, shared, parse_media(*key), filepath
             )
-        except Exception:  # noqa: BLE001
+        except Exception:
             _LOGGER.exception("Unexpected error while looking up TMDb metadata")
             metadata = MediaMetadata(status=STATUS_ERROR)
 

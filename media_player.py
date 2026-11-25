@@ -9,8 +9,8 @@
 from __future__ import annotations
 
 from datetime import datetime
-import voluptuous as vol
 
+import voluptuous as vol
 from homeassistant.components.media_player import (
     MediaPlayerEntity,
     MediaPlayerEntityFeature,
@@ -18,9 +18,9 @@ from homeassistant.components.media_player import (
     MediaType,
 )
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
-from homeassistant.helpers import entity_platform
 
 from .api import STATE_PAUSED, STATE_PLAYING
 from .const import (
@@ -39,7 +39,6 @@ from .entity import MpcHcEntity
 from .metadata import STATUS_MATCHED, STATUS_PENDING, MediaMetadata
 from .parser import MEDIA_MOVIE, MEDIA_TVSHOW
 from .shared import get_shared
-
 
 # Commands are sent one at a time so MPC-HC is not flooded
 PARALLEL_UPDATES = 1
