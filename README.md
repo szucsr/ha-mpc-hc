@@ -37,17 +37,17 @@ Control and monitor Media Player Classic - Home Cinema (MPC-HC) from Home Assist
 
 ## Screenshots
 
-| **Media player** | **With TMDb** |
+| **Media player without TMDb** | **Media player with TMDb** |
 |:---:|:---:|
 | <img src="docs/media-player.png" width="360" alt="Media player without TMDb"> | <img src="docs/media-player-tmdb.png" width="360" alt="Media player with TMDb"> |
 
 | **Controls** 1 | **Controls** 2 |
 |:---:|:---:|
-| <img src="docs/controls1.png" width="260" alt="Controls 1"> | <img src="docs/controls2.png" width="260" alt="Controls 2"> |
+| <img src="docs/controls1.png" width="360" alt="Controls 1"> | <img src="docs/controls2.png" width="360" alt="Controls 2"> |
 
 | **Sensors** | **Configuration** |
 |:---:|:---:|
-| <img src="docs/sensors.png" width="260" alt="Sensors"> | <img src="docs/configuration.png" width="260" alt="Configuration"> |
+| <img src="docs/sensors.png" width="360" alt="Sensors"> | <img src="docs/configuration.png" width="360" alt="Configuration"> |
 
 ## Requirements
 
@@ -283,6 +283,53 @@ Check the exact IDs in **Settings → Entities**: they follow the language Home 
   {{ '%02d:%02d' | format(s // 3600, s % 3600 // 60) }}
 {% else %}
   –
+{% endif %}
+```
+
+### Lovelace markdown card template
+
+<img src="docs/template-media-info.png" width="480" alt="Template media info" /></a>
+
+```jinja2
+{% set state = states('media_player.mpc_hc') %}
+{% set raw_title = state_attr('media_player.mpc_hc', 'media_title') %}
+{% set raw_ep_title = states('sensor.mpc_hc_episode_title') %}
+{% set overview = state_attr('media_player.mpc_hc', 'overview') %}
+{% set season = states('sensor.mpc_hc_season') | int(-1) %}
+{% set episode = states('sensor.mpc_hc_episode') | int(-1) %}
+{% set duration = state_attr('media_player.mpc_hc', 'media_duration') %}
+{% set rel_date = state_attr('media_player.mpc_hc', 'release_date') %}
+{% set rating = state_attr('media_player.mpc_hc', 'rating') %}
+
+{% set is_active = state not in ['off', 'idle', 'unavailable', 'unknown', 'none', ''] %}
+{% set title = raw_title if raw_title not in [none, '', 'unknown', 'unavailable'] else 'Unknown title' %}
+{% set ep_title = raw_ep_title if raw_ep_title not in ['', 'unknown', 'unavailable', 'none'] else '' %}
+{% set has_overview = overview not in [none, '', 'unknown', 'unavailable'] %}
+{% set ep_code = 'S%02dE%02d' | format(season, episode) if season >= 0 and episode >= 0 else '' %}
+
+{% set ns = namespace(meta=[]) %}
+{% if ep_code %}
+  {% set ns.meta = ns.meta + [ep_code] %}
+{% endif %}
+{% if duration is number and duration > 0 %}
+  {% set ns.meta = ns.meta + [((duration | int) // 60) ~ ' min'] %}
+{% endif %}
+{% if rel_date not in [none, '', 'unknown', 'unavailable'] %}
+  {% set ns.meta = ns.meta + [rel_date] %}
+{% endif %}
+{% if rating not in [none, '', 'unknown', 'unavailable'] %}
+  {% set ns.meta = ns.meta + ['Rating: ' ~ rating] %}
+{% endif %}
+{% set meta_line = ns.meta | join(' | ') %}
+
+{% if not is_active %}
+Nothing playing right now.
+{% else %}
+**{{ title }}**
+{% if ep_title %}{{ ep_title }}{% endif %}
+{% if meta_line %}{{ meta_line }}{% endif %}
+{% if has_overview %}
+  {{ overview }}{% endif %}
 {% endif %}
 ```
 
