@@ -1,8 +1,8 @@
 # MPC-HC for Home Assistant
 
-[![GitHub release](https://img.shields.io/github/release/szucsr/ha-mpc-hc.svg)](https://github.com/szucsr/ha-mpc-hc/releases/)
+[![GitHub release](https://img.shields.io/github/v/release/szucsr/ha-mpc-hc?include_prereleases&sort=semver&style=flat)](https://github.com/szucsr/ha-mpc-hc/releases)
 [![Validate](https://github.com/szucsr/ha-mpc-hc/actions/workflows/validate.yml/badge.svg)](https://github.com/szucsr/ha-mpc-hc/actions/workflows/validate.yml)
-[![License: MIT](https://img.shields.io/github/license/szucsr/ha-mpc-hc.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/github/license/szucsr/ha-mpc-hc?style=flat)](LICENSE.md)
 <!-- TODO: enable this badge once the integration shows up in the Home Assistant analytics
 ![Installs](https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=integration%20usage&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.mpc_hc.total)
 -->
